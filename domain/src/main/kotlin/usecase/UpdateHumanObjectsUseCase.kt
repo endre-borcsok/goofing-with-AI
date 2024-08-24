@@ -50,6 +50,7 @@ private class AiUpdateHumanObjectsUseCase(
 
     private fun Action.react(human: ObjectModel.Human) =
         when (this) {
+            Action.NO_ACTION -> human
             Action.MOVE_UP -> human.move(human.position.copy(y = human.position.y - human.size))
             Action.MOVE_DOWN -> human.move(human.position.copy(y = human.position.y + human.size))
             Action.MOVE_LEFT -> human.move(human.position.copy(x = human.position.x - human.size))

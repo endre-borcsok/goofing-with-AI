@@ -1,6 +1,8 @@
-#!/bin/python
 import socketserver
 import random
+
+import tensorflow as tf
+import keras
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
     """
@@ -16,7 +18,6 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         self.data = self.request.recv(1024).strip()
         print("{} wrote:".format(self.client_address[0]))
         print(self.data)
-        # just send back the same data, but upper-cased
         action = random.randint(1,4)
         actionBytes = action.to_bytes(4, 'big')
         self.request.sendall(actionBytes)

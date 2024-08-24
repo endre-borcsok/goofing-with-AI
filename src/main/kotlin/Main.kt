@@ -15,7 +15,7 @@ import usecase.UpdateWorldUseCase
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-const val serverLaunchCommand = "python3 ai_server.py"
+const val serverLaunchCommand = "./ai_launch.sh"
 
 val ioScope = CoroutineScope(Dispatchers.IO)
 val appRepository = AppRepository.create()
