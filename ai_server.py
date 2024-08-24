@@ -13,9 +13,8 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         # self.request is the TCP socket connected to the client
         self.data = self.request.recv(1024).strip()
-        print("{} wrote:".format(self.client_address[0]))
-        print(self.data)
-        self.request.sendall(ai_agent.make_decision())
+        print("{} sent:".format(self.client_address[0]))
+        self.request.sendall(ai_agent.make_decision(self.data))
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999
