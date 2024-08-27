@@ -6,6 +6,8 @@ import com.julia.data.AppRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import mapper.toAppState
 import model.AppModel
@@ -21,19 +23,24 @@ val ioScope = CoroutineScope(Dispatchers.IO)
 val appRepository = AppRepository.create()
 val updateWorldUseCase = UpdateWorldUseCase.create()
 
+val appModel = appRepository.appModel.stateIn(
+    scope = ioScope,
+    started = SharingStarted.Eagerly,
+    initialValue = WorldModel.Default
+)
+
 fun main() = application {
     ioScope.startServer()
+    ioScope.launch { loopApp() }
     Window(::exitApplication) {
-        val appModel = appRepository.appModel.collectAsState(WorldModel.Default)
-        LaunchedEffect(Unit) { loopApp(appModel.value) }
-        App(appModel.value.toAppState())
+        App(appModel.collectAsState().value.toAppState())
     }
 }
 
-private suspend fun loopApp(appModel: AppModel) {
+private suspend fun loopApp() {
     while (true) {
-        delay(500)
-        update(appModel).let { app ->
+        delay(1000)
+        update(appModel.value).let { app ->
             if (app.over()) {
                 appRepository.restartApp()
             } else {
